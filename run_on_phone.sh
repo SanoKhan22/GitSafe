@@ -42,6 +42,6 @@ fi
 cd "$PROJECT_DIR"
 
 log_info "Building and installing app on your phone..."
-flutter run -d android
+flutter run -d 1BFACS00001P3C
 
 log_success "App should now be running on your phone!"

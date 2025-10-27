@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# GITSAFE - Universal Git Branch Manager
+# GULLYCRIC - Universal Git Branch Manager
 # A comprehensive branch management system for safe Git operations
 # Version: 1.0.0
 
@@ -11,15 +11,15 @@ set -euo pipefail  # Exit on error, undefined vars, pipe failures
 # =============================================================================
 
 # Script metadata
-readonly SCRIPT_NAME="GITSAFE"
+readonly SCRIPT_NAME="GULLYCRIC"
 readonly SCRIPT_VERSION="1.0.0"
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Configuration paths
-readonly CONFIG_DIR="$HOME/.config/gitsafe"
+readonly CONFIG_DIR="$HOME/.config/gullycric"
 readonly CONFIG_FILE="$CONFIG_DIR/config"
 readonly LOG_DIR="$CONFIG_DIR/logs"
-readonly LOG_FILE="$LOG_DIR/gitsafe.log"
+readonly LOG_FILE="$LOG_DIR/gullycric.log"
 readonly BACKUP_DIR="$CONFIG_DIR/backups"
 
 # Default configuration values
@@ -69,7 +69,7 @@ init_logging() {
     fi
     
     # Log script startup (after file is created)
-    log_info "GITSAFE v$SCRIPT_VERSION started"
+    log_info "GULLYCRIC v$SCRIPT_VERSION started"
     log_info "Log file: $LOG_FILE"
 }
 
@@ -132,7 +132,7 @@ create_default_config() {
     mkdir -p "$CONFIG_DIR"
     
     cat > "$CONFIG_FILE" << EOF
-# GITSAFE Configuration
+# GULLYCRIC Configuration
 # Universal Git Branch Manager - Default settings for branch operations
 
 # Default base branch for new feature branches
@@ -280,11 +280,11 @@ branch_exists() {
 
 # Display comprehensive script usage
 show_usage() {
-    echo -e "${WHITE}GITSAFE v$SCRIPT_VERSION - Universal Git Branch Manager${NC}"
+    echo -e "${WHITE}GULLYCRIC v$SCRIPT_VERSION - Universal Git Branch Manager${NC}"
     echo -e "${WHITE}====================================================${NC}"
     echo ""
     echo -e "${CYAN}DESCRIPTION:${NC}"
-    echo "    GITSAFE is a comprehensive branch management system for safe Git operations"
+    echo "    GULLYCRIC is a comprehensive branch management system for safe Git operations"
     echo "    with intelligent conflict resolution and seamless repository integration."
     echo ""
     
@@ -407,7 +407,7 @@ show_usage() {
 
 # Display version information
 show_version() {
-    echo -e "${WHITE}GITSAFE - Universal Git Branch Manager${NC}"
+    echo -e "${WHITE}GULLYCRIC - Universal Git Branch Manager${NC}"
     echo -e "Version: ${CYAN}$SCRIPT_VERSION${NC}"
     echo -e "Configuration: ${CYAN}$CONFIG_FILE${NC}"
     echo -e "Logs: ${CYAN}$LOG_FILE${NC}"
@@ -3525,7 +3525,7 @@ complete_post_merge_workflow() {
 show_main_menu() {
     clear
     echo -e "${WHITE}╔══════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${WHITE}║                         GITSAFE v$SCRIPT_VERSION                         ║${NC}"
+    echo -e "${WHITE}║                         GULLYCRIC v$SCRIPT_VERSION                         ║${NC}"
     echo -e "${WHITE}║                Universal Git Branch Manager                  ║${NC}"
     echo -e "${WHITE}╚══════════════════════════════════════════════════════════════╝${NC}"
     echo ""
@@ -4142,7 +4142,7 @@ show_help_menu() {
                 echo ""
                 show_version
                 echo ""
-                echo -e "${WHITE}GITSAFE - Universal Git Branch Manager${NC}"
+                echo -e "${WHITE}GULLYCRIC - Universal Git Branch Manager${NC}"
                 echo "A comprehensive branch management system for safe Git operations"
                 echo ""
                 echo -e "${CYAN}Features:${NC}"
@@ -4231,7 +4231,7 @@ run_interactive_interface() {
                 ;;
             q|Q)
                 echo ""
-                echo -e "${GREEN}Thank you for using GITSAFE!${NC}"
+                echo -e "${GREEN}Thank you for using GULLYCRIC!${NC}"
                 exit 0
                 ;;
             *)
@@ -6525,7 +6525,7 @@ push_to_github() {
         return 1
     fi
     
-    echo -e "${BLUE}🚀 GITSAFE - Push to Repository${NC}"
+    echo -e "${BLUE}🚀 GULLYCRIC - Push to Repository${NC}"
     echo "========================================"
     
     # Verify remote origin is accessible
@@ -6659,7 +6659,7 @@ push_to_github() {
 
 # Interactive push interface
 interactive_push() {
-    echo -e "${WHITE}GITSAFE - Interactive Push to Repository${NC}"
+    echo -e "${WHITE}GULLYCRIC - Interactive Push to Repository${NC}"
     echo "========================================"
     echo ""
     
@@ -6761,7 +6761,7 @@ initialize_system() {
     # Check Git repository
     check_git_repository
     
-    log_info "GITSAFE system initialized successfully"
+    log_info "GULLYCRIC system initialized successfully"
 }
 
 # =============================================================================
@@ -6829,7 +6829,7 @@ main() {
             ;;
     esac
     
-    log_info "GITSAFE execution completed"
+    log_info "GULLYCRIC execution completed"
 }
 
 # Run main function if script is executed directly
