@@ -300,6 +300,7 @@ show_usage() {
     echo "    sync [branch]           Synchronize with remote repository"
     echo "    status [--all]          Show branch status information"
     echo "    cleanup [target]        Clean up merged branches"
+    echo "    push [message]          Commit and push changes to GitHub"
     echo ""
     
     echo -e "${CYAN}WORKFLOW COMMANDS:${NC}"
@@ -3582,17 +3583,22 @@ show_main_menu() {
     echo -e "    • Check repository health"
     echo -e "    • Show detailed information"
     echo ""
-    echo -e " ${CYAN}5.${NC} Cleanup Operations"
+    echo -e " ${CYAN}5.${NC} Push to GitHub"
+    echo -e "    • Commit and push changes"
+    echo -e "    • Interactive push options"
+    echo -e "    • Auto-generated commit messages"
+    echo ""
+    echo -e " ${CYAN}6.${NC} Cleanup Operations"
     echo -e "    • Delete merged branches"
     echo -e "    • Manage backups"
     echo -e "    • Repository maintenance"
     echo ""
-    echo -e " ${CYAN}6.${NC} Configuration"
+    echo -e " ${CYAN}7.${NC} Configuration"
     echo -e "    • View/edit settings"
     echo -e "    • Workflow patterns"
     echo -e "    • Tool preferences"
     echo ""
-    echo -e " ${CYAN}7.${NC} Help & Information"
+    echo -e " ${CYAN}8.${NC} Help & Information"
     echo -e "    • Usage examples"
     echo -e "    • Command reference"
     echo -e "    • Troubleshooting"
@@ -4209,12 +4215,17 @@ run_interactive_interface() {
                 show_status_menu
                 ;;
             5)
-                show_cleanup_menu
+                echo ""
+                interactive_push
+                read -p "Press Enter to continue..."
                 ;;
             6)
-                show_config_menu
+                show_cleanup_menu
                 ;;
             7)
+                show_config_menu
+                ;;
+            8)
                 show_help_menu
                 ;;
             q|Q)
@@ -6420,6 +6431,12 @@ show_command_reference() {
     echo "    Example: ./branch_manager.sh cleanup --dry-run"
     echo ""
     
+    echo -e "${YELLOW}push${NC} [commit-message] [options]"
+    echo "    Commit and push changes to GitHub"
+    echo "    Options: --no-confirm"
+    echo "    Example: ./branch_manager.sh push \"Add new feature\""
+    echo ""
+    
     echo -e "${CYAN}WORKFLOW COMMANDS:${NC}"
     echo ""
     echo -e "${YELLOW}workflow complete-feature${NC} [target-branch]"
@@ -6484,6 +6501,242 @@ show_command_reference() {
 }
 
 # =============================================================================
+# INTEGRATED PUSH TO GITHUB FUNCTIONALITY
+# =============================================================================
+
+# Direct push to GitHub functionality (integrated from push_to_github.sh)
+push_to_github() {
+    local commit_message="${1:-}"
+    local auto_commit="${2:-false}"
+    local current_branch
+    current_branch=$(get_current_branch)
+    
+    log_info "Starting push to GitHub process..."
+    
+    # Repository URL (you can make this configurable)
+    local repo_url="https://github.com/SanoKhan22/GullyCric.git"
+    
+    echo -e "${BLUE}🏏 Git Branch Manager - Push to GitHub${NC}"
+    echo "========================================"
+    
+    # Check if remote origin exists and is correct
+    local current_remote
+    current_remote=$(git remote get-url origin 2>/dev/null || echo "")
+    
+    if [[ "$current_remote" != "$repo_url" ]]; then
+        echo -e "${YELLOW}⚠️  Setting up remote origin...${NC}"
+        git remote remove origin 2>/dev/null || true
+        git remote add origin "$repo_url"
+        echo -e "${GREEN}✅ Remote origin set to: $repo_url${NC}"
+        log_info "Remote origin configured: $repo_url"
+    fi
+    
+    # Check for changes (including untracked files)
+    local has_changes=false
+    
+    # Check for uncommitted changes
+    if ! git diff --quiet || ! git diff --cached --quiet; then
+        has_changes=true
+    fi
+    
+    # Check for untracked files
+    if [[ -n "$(git ls-files --others --exclude-standard)" ]]; then
+        has_changes=true
+    fi
+    
+    # Check for unpushed commits
+    local unpushed_commits=0
+    if has_upstream "$current_branch"; then
+        local upstream
+        upstream=$(get_upstream_branch "$current_branch")
+        unpushed_commits=$(git rev-list --count "$upstream..$current_branch" 2>/dev/null || echo "0")
+    else
+        # If no upstream, check if there are any commits
+        unpushed_commits=$(git rev-list --count HEAD 2>/dev/null || echo "0")
+    fi
+    
+    if [[ "$has_changes" == false && "$unpushed_commits" -eq 0 ]]; then
+        echo -e "${YELLOW}⚠️  No changes detected${NC}"
+        echo "Nothing to commit or push. Working tree clean and up to date."
+        return 0
+    fi
+    
+    # Show current status
+    echo -e "\n${CYAN}Current Status:${NC}"
+    echo -e "${CYAN}Branch:${NC} $current_branch"
+    if [[ "$unpushed_commits" -gt 0 ]]; then
+        echo -e "${CYAN}Unpushed commits:${NC} $unpushed_commits"
+    fi
+    
+    # Handle uncommitted changes
+    if [[ "$has_changes" == true ]]; then
+        echo -e "\n${BLUE}📋 Changes detected:${NC}"
+        
+        # Show what will be committed
+        if ! git diff --quiet || ! git diff --cached --quiet; then
+            echo "Modified files:"
+            git status --porcelain | grep -E "^[MARC ]" || true
+        fi
+        
+        if [[ -n "$(git ls-files --others --exclude-standard)" ]]; then
+            echo "Untracked files:"
+            git ls-files --others --exclude-standard
+        fi
+        
+        # Get commit message
+        if [[ -z "$commit_message" && "$auto_commit" == "false" ]]; then
+            echo -e "\n${BLUE}📝 Enter your commit message:${NC}"
+            read -p "Commit: " commit_message
+            
+            # If user didn't enter anything, use auto-generated message
+            if [[ -z "$commit_message" ]]; then
+                local timestamp
+                timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+                commit_message="Auto-commit: Updates on $timestamp"
+                echo -e "${YELLOW}📝 Using auto-generated message: $commit_message${NC}"
+            else
+                echo -e "${GREEN}📝 Using your message: $commit_message${NC}"
+            fi
+        elif [[ -z "$commit_message" ]]; then
+            local timestamp
+            timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+            commit_message="Auto-commit: Updates on $timestamp"
+            echo -e "${YELLOW}📝 Using auto-generated message: $commit_message${NC}"
+        else
+            echo -e "${GREEN}📝 Commit message: $commit_message${NC}"
+        fi
+        
+        # Commit changes
+        echo -e "\n${BLUE}💾 Committing changes...${NC}"
+        git add .
+        git commit -m "$commit_message"
+        log_operation "COMMIT" "$current_branch" "SUCCESS" "$commit_message"
+    fi
+    
+    # Push to GitHub
+    echo -e "\n${BLUE}🚀 Pushing to GitHub...${NC}"
+    
+    # Create backup before push
+    local backup_id
+    backup_id=$(create_safety_backup "PUSH_TO_GITHUB")
+    
+    # Perform the push
+    if git push -u origin "$current_branch"; then
+        echo -e "\n${GREEN}✅ Successfully pushed to GitHub!${NC}"
+        echo -e "${GREEN}🔗 Repository: $repo_url${NC}"
+        echo -e "${GREEN}🌿 Branch: $current_branch${NC}"
+        
+        log_operation "PUSH_TO_GITHUB" "$current_branch" "SUCCESS" "Pushed to $repo_url"
+        return 0
+    else
+        echo -e "\n${RED}❌ Failed to push to GitHub${NC}"
+        log_error "Push to GitHub failed"
+        log_operation "PUSH_TO_GITHUB" "$current_branch" "FAILED" "Push failed"
+        
+        # Offer recovery options
+        echo ""
+        echo "Recovery options:"
+        echo "1. Check network connectivity"
+        echo "2. Verify GitHub credentials"
+        echo "3. Check repository permissions"
+        echo "4. Try again later"
+        
+        if [[ "${CONFIG[REQUIRE_CONFIRMATION]}" == "true" ]]; then
+            read -p "Restore from backup? (y/N): " restore_backup
+            if [[ "$restore_backup" == "y" || "$restore_backup" == "Y" ]]; then
+                restore_from_backup "$backup_id"
+            fi
+        fi
+        
+        return 1
+    fi
+}
+
+# Interactive push interface
+interactive_push() {
+    echo -e "${WHITE}Interactive Push to GitHub${NC}"
+    echo "=========================="
+    echo ""
+    
+    local current_branch
+    current_branch=$(get_current_branch)
+    echo -e "${CYAN}Current Branch:${NC} ${GREEN}$current_branch${NC}"
+    
+    # Show current status
+    echo ""
+    echo -e "${WHITE}Repository Status:${NC}"
+    
+    # Check for uncommitted changes
+    if ! git diff --quiet || ! git diff --cached --quiet; then
+        echo -e "${YELLOW}• Uncommitted changes detected${NC}"
+    fi
+    
+    # Check for untracked files
+    if [[ -n "$(git ls-files --others --exclude-standard)" ]]; then
+        echo -e "${YELLOW}• Untracked files detected${NC}"
+    fi
+    
+    # Check for unpushed commits
+    if has_upstream "$current_branch"; then
+        local upstream ahead_count
+        upstream=$(get_upstream_branch "$current_branch")
+        ahead_count=$(git rev-list --count "$upstream..$current_branch" 2>/dev/null || echo "0")
+        
+        if [[ "$ahead_count" -gt 0 ]]; then
+            echo -e "${BLUE}• $ahead_count unpushed commits${NC}"
+        else
+            echo -e "${GREEN}• Up to date with upstream${NC}"
+        fi
+    else
+        echo -e "${YELLOW}• No upstream configured${NC}"
+    fi
+    
+    echo ""
+    echo "Push options:"
+    echo "1) Push with custom commit message"
+    echo "2) Push with auto-generated message"
+    echo "3) Show detailed status first"
+    echo "4) Cancel"
+    
+    while true; do
+        read -p "Enter your choice (1-4): " choice
+        case $choice in
+            1)
+                echo ""
+                read -p "Enter commit message: " commit_msg
+                if [[ -n "$commit_msg" ]]; then
+                    push_to_github "$commit_msg"
+                    return $?
+                else
+                    echo "Commit message cannot be empty"
+                    continue
+                fi
+                ;;
+            2)
+                echo ""
+                push_to_github "" "true"
+                return $?
+                ;;
+            3)
+                echo ""
+                echo -e "${WHITE}Detailed Status:${NC}"
+                git status
+                echo ""
+                continue
+                ;;
+            4)
+                echo "Push cancelled"
+                return 1
+                ;;
+            *)
+                echo "Invalid choice. Please enter 1, 2, 3, or 4."
+                continue
+                ;;
+        esac
+    done
+}
+
+# =============================================================================
 # INITIALIZATION
 # =============================================================================
 
@@ -6539,6 +6792,14 @@ main() {
         "cleanup")
             shift
             cleanup_command "$@"
+            ;;
+        "push")
+            shift
+            if [[ -n "$1" ]]; then
+                push_to_github "$*"
+            else
+                interactive_push
+            fi
             ;;
         "config")
             show_configuration
