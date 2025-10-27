@@ -1,223 +1,74 @@
 #!/bin/bash
 
-# Script to regularly push code to GitHub with proper commit messages
+# Push to GitHub script for GullyCric repository
+# Usage: ./push_to_github.sh [commit_message]
+# Example: ./push_to_github.sh "Add new feature"
+# Example: ./push_to_github.sh Add new feature (no quotes needed for multiple words)
 
-set -e
+set -e  # Exit on any error
 
-# Colors
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-YELLOW='\033[1;33m'
+# Colors for output
 RED='\033[0;31m'
-NC='\033[0m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
 
-log_info() {
-    echo -e "${BLUE}[GIT]${NC} $1"
-}
+# Repository URL
+REPO_URL="https://github.com/SanoKhan22/GullyCric.git"
 
-log_success() {
-    echo -e "${GREEN}[GIT]${NC} $1"
-}
+echo -e "${BLUE}🏏 GullyCric Push Script${NC}"
+echo "================================"
 
-log_warning() {
-    echo -e "${YELLOW}[GIT]${NC} $1"
-}
+# Check if we're in a git repository
+if [ ! -d ".git" ]; then
+    echo -e "${RED}❌ Error: Not in a git repository${NC}"
+    echo "Run: git init && git remote add origin $REPO_URL"
+    exit 1
+fi
 
-log_error() {
-    echo -e "${RED}[GIT]${NC} $1"
-}
+# Check if remote origin exists and is correct
+CURRENT_REMOTE=$(git remote get-url origin 2>/dev/null || echo "")
+if [ "$CURRENT_REMOTE" != "$REPO_URL" ]; then
+    echo -e "${YELLOW}⚠️  Setting up remote origin...${NC}"
+    git remote remove origin 2>/dev/null || true
+    git remote add origin "$REPO_URL"
+    echo -e "${GREEN}✅ Remote origin set to: $REPO_URL${NC}"
+fi
 
-# Function to check if we're in a git repository
-check_git_repo() {
-    if ! git rev-parse --git-dir > /dev/null 2>&1; then
-        log_error "Not a git repository. Initialize with: git init"
-        exit 1
-    fi
-}
-
-# Function to check git status
-check_git_status() {
-    log_info "Checking git status..."
-    
-    if [[ -z $(git status --porcelain) ]]; then
-        log_warning "No changes to commit"
-        return 1
-    fi
-    
-    log_info "Changes detected:"
-    git status --short
-    return 0
-}
-
-# Function to add files
-add_files() {
-    log_info "Adding files to git..."
-    
-    # Add all files except sensitive ones
-    git add .
-    
-    # Remove sensitive files if accidentally added
-    git reset HEAD flutter_projects/.android/release-key.jks 2>/dev/null || true
-    git reset HEAD .env 2>/dev/null || true
-    git reset HEAD *.key 2>/dev/null || true
-    
-    log_success "Files added to staging"
-}
-
-# Function to create commit message
-create_commit_message() {
-    local default_message="Update Flutter Android setup - $(date '+%Y-%m-%d %H:%M')"
-    
-    if [[ $# -gt 0 ]]; then
-        echo "$*"
-    else
-        echo "$default_message"
-    fi
-}
-
-# Function to commit changes
-commit_changes() {
-    local commit_message="$1"
-    
-    log_info "Committing changes..."
-    log_info "Commit message: $commit_message"
-    
-    if git commit -m "$commit_message"; then
-        log_success "Changes committed successfully"
-        return 0
-    else
-        log_error "Commit failed"
-        return 1
-    fi
-}
-
-# Function to push to GitHub
-push_to_github() {
-    log_info "Pushing to GitHub..."
-    
-    # Get current branch
-    local current_branch=$(git branch --show-current)
-    log_info "Current branch: $current_branch"
-    
-    # Check if remote exists
-    if ! git remote get-url origin >/dev/null 2>&1; then
-        log_error "No 'origin' remote found. Add your GitHub repo:"
-        log_info "git remote add origin https://github.com/yourusername/your-repo.git"
-        exit 1
-    fi
-    
-    # Push to GitHub
-    if git push origin "$current_branch"; then
-        log_success "Successfully pushed to GitHub!"
-        
-        # Show remote URL
-        local remote_url=$(git remote get-url origin)
-        log_info "Repository: $remote_url"
-        
-        return 0
-    else
-        log_error "Push failed. You may need to pull first:"
-        log_info "git pull origin $current_branch"
-        return 1
-    fi
-}
-
-# Function to setup .gitignore
-setup_gitignore() {
-    if [[ ! -f .gitignore ]]; then
-        log_info "Creating .gitignore file..."
-        
-        cat > .gitignore << 'EOF'
-# Flutter/Dart specific
-flutter_projects/*/build/
-flutter_projects/*/.dart_tool/
-flutter_projects/*/.packages
-flutter_projects/*/pubspec.lock
-
-# Sensitive files
-flutter_projects/.android/release-key.jks
-*.key
-*.keystore
-.env
-.env.local
-
-# IDE files
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
-
-# Temporary files
-*.tmp
-*.temp
-*~
-
-# Backup files
-*.backup.*
-*_backup_*
-EOF
-        
-        log_success ".gitignore created"
-    fi
-}
-
-# Main function
-main() {
-    log_info "GitHub Push Script"
-    log_info "=================="
-    
-    # Check if we're in a git repo
-    check_git_repo
-    
-    # Setup .gitignore if needed
-    setup_gitignore
-    
-    # Check for changes
-    if ! check_git_status; then
-        exit 0
-    fi
-    
-    # Add files
-    add_files
-    
-    # Create commit message
-    local commit_message=$(create_commit_message "$@")
-    
-    # Commit changes
-    if ! commit_changes "$commit_message"; then
-        exit 1
-    fi
-    
-    # Push to GitHub
-    if ! push_to_github; then
-        exit 1
-    fi
-    
-    log_success "=================="
-    log_success "All done! Your code is now on GitHub 🚀"
-}
-
-# Show usage if --help
-if [[ "$1" == "--help" || "$1" == "-h" ]]; then
-    echo "Usage: $0 [commit message]"
-    echo ""
-    echo "Examples:"
-    echo "  $0                           # Use default commit message"
-    echo "  $0 \"Add new feature\"         # Use custom commit message"
-    echo "  $0 Fix bug in validation     # Multiple words (no quotes needed)"
-    echo ""
-    echo "First time setup:"
-    echo "  git init"
-    echo "  git remote add origin https://github.com/yourusername/your-repo.git"
+# Check for changes
+if git diff --quiet && git diff --cached --quiet; then
+    echo -e "${YELLOW}⚠️  No changes detected${NC}"
+    echo "Nothing to commit. Working tree clean."
     exit 0
 fi
 
-# Run main function
-main "$@"
+# Generate commit message
+if [ $# -eq 0 ]; then
+    # Auto-generate commit message based on changes
+    TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
+    COMMIT_MSG="Auto-commit: Updates on $TIMESTAMP"
+    echo -e "${YELLOW}📝 No commit message provided. Using: $COMMIT_MSG${NC}"
+else
+    # Use provided arguments as commit message
+    COMMIT_MSG="$*"
+    echo -e "${GREEN}📝 Commit message: $COMMIT_MSG${NC}"
+fi
+
+# Show what will be committed
+echo -e "\n${BLUE}📋 Files to be committed:${NC}"
+git add .
+git status --porcelain
+
+# Commit changes
+echo -e "\n${BLUE}💾 Committing changes...${NC}"
+git commit -m "$COMMIT_MSG"
+
+# Push to GitHub
+echo -e "\n${BLUE}🚀 Pushing to GitHub...${NC}"
+CURRENT_BRANCH=$(git branch --show-current)
+git push -u origin "$CURRENT_BRANCH"
+
+echo -e "\n${GREEN}✅ Successfully pushed to GitHub!${NC}"
+echo -e "${GREEN}🔗 Repository: $REPO_URL${NC}"
+echo -e "${GREEN}🌿 Branch: $CURRENT_BRANCH${NC}"
