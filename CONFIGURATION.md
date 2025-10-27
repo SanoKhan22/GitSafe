@@ -1,12 +1,12 @@
-# Git Branch Manager Configuration Guide
+# GITSAFE Configuration Guide
 
-This guide provides comprehensive information about configuring the Git Branch Manager for your specific needs.
+This guide provides comprehensive information about configuring GITSAFE (Universal Git Branch Manager) for your specific needs.
 
 ## 📁 Configuration File Location
 
 The main configuration file is located at:
 ```
-~/.config/branch_manager/config
+~/.config/gitsafe/config
 ```
 
 ## ⚙️ Configuration Options

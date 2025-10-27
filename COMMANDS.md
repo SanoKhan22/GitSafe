@@ -1,6 +1,6 @@
-# Git Branch Manager Command Reference
+# GITSAFE Command Reference
 
-Complete reference for all Git Branch Manager commands, options, and usage patterns.
+Complete reference for all GITSAFE (Universal Git Branch Manager) commands, options, and usage patterns.
 
 ## 📋 Table of Contents
 
@@ -18,8 +18,8 @@ Create a new branch with safety checks and workflow validation.
 
 **Syntax:**
 ```bash
-./branch_manager.sh create <branch-name> [base-branch] [options]
-./branch_manager.sh create --workflow-type=<type> <description> [options]
+./gitsafe.sh create <branch-name> [base-branch] [options]
+./gitsafe.sh create --workflow-type=<type> <description> [options]
 ```
 
 **Arguments:**

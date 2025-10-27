@@ -1,6 +1,6 @@
-# Git Branch Manager
+# GITSAFE - Universal Git Branch Manager
 
-A comprehensive branch management system for safe Git operations with intelligent conflict resolution, automated workflows, and seamless GitHub integration.
+A comprehensive branch management system for safe Git operations with intelligent conflict resolution, automated workflows, and seamless repository integration.
 
 ## 🚀 Features
 
@@ -15,16 +15,16 @@ A comprehensive branch management system for safe Git operations with intelligen
 
 ## 📦 Installation
 
-1. **Download the script:**
+1. **Download GITSAFE:**
    ```bash
-   curl -O https://raw.githubusercontent.com/your-repo/branch_manager.sh
+   curl -O https://raw.githubusercontent.com/SanoKhan22/GitSafe/master/gitsafe.sh
    # or clone the repository
-   git clone https://github.com/your-repo/git-branch-manager.git
+   git clone https://github.com/SanoKhan22/GitSafe.git
    ```
 
 2. **Make it executable:**
    ```bash
-   chmod +x branch_manager.sh
+   chmod +x gitsafe.sh
    ```
 
 3. **Run initial setup:**
@@ -36,29 +36,32 @@ A comprehensive branch management system for safe Git operations with intelligen
 
 ### Interactive Mode
 ```bash
-./branch_manager.sh
+./gitsafe.sh
 ```
 Navigate through the beautiful menu system with numbered options.
 
 ### Command Line Mode
 ```bash
 # Create a new feature branch
-./branch_manager.sh create feature/user-authentication
+./gitsafe.sh create feature/user-authentication
 
 # Switch to a branch
-./branch_manager.sh switch main
+./gitsafe.sh switch main
 
 # Merge a branch
-./branch_manager.sh merge feature/user-authentication main
+./gitsafe.sh merge feature/user-authentication main
 
 # Sync with upstream
-./branch_manager.sh sync
+./gitsafe.sh sync
 
 # Show status
-./branch_manager.sh status --all
+./gitsafe.sh status --all
 
 # Clean up merged branches
-./branch_manager.sh cleanup
+./gitsafe.sh cleanup
+
+# Push to repository
+./gitsafe.sh push "Add new feature"
 ```
 
 ## 📚 Usage Guide
