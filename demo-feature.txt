@@ -1,0 +1,15 @@
+This is a demo feature file created to test the Git Branch Manager workflow.
+
+Features implemented:
+- Branch creation and switching
+- Safety checks and validation
+- Interactive user interface
+- Merge operations with conflict resolution
+- Remote synchronization
+- Comprehensive documentation
+
+This demonstrates the complete workflow of:
+1. Creating a feature branch
+2. Making changes and commits
+3. Merging back to main
+4. Pushing to GitHub
