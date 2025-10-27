@@ -45,10 +45,18 @@ fi
 
 # Generate commit message
 if [ $# -eq 0 ]; then
-    # Auto-generate commit message based on changes
-    TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
-    COMMIT_MSG="Auto-commit: Updates on $TIMESTAMP"
-    echo -e "${YELLOW}📝 No commit message provided. Using: $COMMIT_MSG${NC}"
+    # Prompt user for commit message
+    echo -e "${BLUE}📝 Enter your commit message:${NC}"
+    read -p "Commit: " COMMIT_MSG
+    
+    # If user didn't enter anything, use auto-generated message
+    if [ -z "$COMMIT_MSG" ]; then
+        TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
+        COMMIT_MSG="Auto-commit: Updates on $TIMESTAMP"
+        echo -e "${YELLOW}📝 Using auto-generated message: $COMMIT_MSG${NC}"
+    else
+        echo -e "${GREEN}📝 Using your message: $COMMIT_MSG${NC}"
+    fi
 else
     # Use provided arguments as commit message
     COMMIT_MSG="$*"
