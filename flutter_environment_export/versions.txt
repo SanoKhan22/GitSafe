@@ -1,0 +1,30 @@
+Flutter Android Development Environment - Version Information
+Generated: Sun Oct 26 09:51:18 PM CET 2025
+System: Linux pop-os 6.16.3-76061603-generic #202508231538~1758561135~22.04~171c8de SMP PREEMPT_DYNAMIC Mon S x86_64 x86_64 x86_64 GNU/Linux
+
+=== Flutter ===
+Flutter 3.24.5 • channel [user-branch] • unknown source
+Framework • revision dec2ee5c1f (12 months ago) • 2024-11-13 11:13:06 -0800
+Engine • revision a18df97ca5
+Tools • Dart 3.5.4 • DevTools 2.37.3
+
+=== Dart ===
+Dart SDK version: 3.5.4 (stable) (Wed Oct 16 16:18:51 2024 +0000) on "linux_x64"
+
+=== Java ===
+openjdk version "17.0.16" 2025-07-15
+OpenJDK Runtime Environment (build 17.0.16+8-Ubuntu-0ubuntu122.04.1)
+OpenJDK 64-Bit Server VM (build 17.0.16+8-Ubuntu-0ubuntu122.04.1, mixed mode, sharing)
+
+=== Android SDK ===
+Android Debug Bridge version 1.0.41
+Version 36.0.0-13206524
+Installed as /usr/lib/android-sdk/platform-tools/adb
+Running on Linux 6.16.3-76061603-generic (x86_64)
+
+=== Git ===
+git version 2.34.1
+
+=== Chrome ===
+Google Chrome 141.0.7390.122 
+

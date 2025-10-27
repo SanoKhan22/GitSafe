@@ -1,0 +1,34 @@
+# Flutter/Dart specific
+flutter_projects/*/build/
+flutter_projects/*/.dart_tool/
+flutter_projects/*/.packages
+flutter_projects/*/pubspec.lock
+
+# Sensitive files
+flutter_projects/.android/release-key.jks
+*.key
+*.keystore
+.env
+.env.local
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# Backup files
+*.backup.*
+*_backup_*

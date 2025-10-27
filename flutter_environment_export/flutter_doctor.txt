@@ -1,0 +1,55 @@
+Flutter Doctor Output - Sun Oct 26 09:51:18 PM CET 2025
+======================================
+
+[!] Flutter (Channel [user-branch], 3.24.5, on Pop!_OS 22.04 LTS 6.16.3-76061603-generic, locale en_US.UTF-8)
+    ! Flutter version 3.24.5 on channel [user-branch] at /home/sano/flutter
+      Currently on an unknown channel. Run `flutter channel` to switch to an official channel.
+      If that doesn't fix the issue, reinstall Flutter by following instructions at https://flutter.dev/setup.
+    ! Upstream repository unknown source is not a standard remote.
+      Set environment variable "FLUTTER_GIT_URL" to unknown source to dismiss this error.
+    • Framework revision dec2ee5c1f (12 months ago), 2024-11-13 11:13:06 -0800
+    • Engine revision a18df97ca5
+    • Dart version 3.5.4
+    • DevTools version 2.37.3
+    • If those were intentional, you can disregard the above warnings; however it is recommended to use "git" directly to perform update checks and upgrades.
+
+[✓] Android toolchain - develop for Android devices (Android SDK version 35.0.0)
+    • Android SDK at /usr/lib/android-sdk
+    • Platform android-36, build-tools 35.0.0
+    • ANDROID_HOME = /usr/lib/android-sdk
+    • Java binary at: /opt/android-studio/jbr/bin/java
+    • Java version OpenJDK Runtime Environment (build 17.0.10+0-17.0.10b1087.21-11572160)
+    • All Android licenses accepted.
+
+[✓] Chrome - develop for the web
+    • Chrome at google-chrome
+
+[✓] Linux toolchain - develop for Linux desktop
+    • Ubuntu clang version 14.0.0-1ubuntu1.1
+    • cmake version 3.22.1
+    • ninja version 1.10.1
+    • pkg-config version 0.29.2
+
+[!] Android Studio (version unknown)
+    • Android Studio at /opt/android-studio
+    • Flutter plugin can be installed from:
+      🔨 https://plugins.jetbrains.com/plugin/9212-flutter
+    • Dart plugin can be installed from:
+      🔨 https://plugins.jetbrains.com/plugin/6351-dart
+    ✗ Unable to determine Android Studio version.
+    • Java version OpenJDK Runtime Environment (build 17.0.10+0-17.0.10b1087.21-11572160)
+
+[✓] VS Code (version 1.105.1)
+    • VS Code at /usr/share/code
+    • Flutter extension can be installed from:
+      🔨 https://marketplace.visualstudio.com/items?itemName=Dart-Code.flutter
+
+[✓] Connected device (3 available)
+    • Pixel 4 XL (mobile) • 1BFACS00001P3C • android-arm64  • Android 13 (API 33)
+    • Linux (desktop)     • linux          • linux-x64      • Pop!_OS 22.04 LTS 6.16.3-76061603-generic
+    • Chrome (web)        • chrome         • web-javascript • Google Chrome 141.0.7390.122
+
+[✓] Network resources
+    • All expected network resources are available.
+
+! Doctor found issues in 2 categories.
