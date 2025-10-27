@@ -36,8 +36,8 @@ if [ "$CURRENT_REMOTE" != "$REPO_URL" ]; then
     echo -e "${GREEN}✅ Remote origin set to: $REPO_URL${NC}"
 fi
 
-# Check for changes
-if git diff --quiet && git diff --cached --quiet; then
+# Check for changes (including untracked files)
+if git diff --quiet && git diff --cached --quiet && [ -z "$(git ls-files --others --exclude-standard)" ]; then
     echo -e "${YELLOW}⚠️  No changes detected${NC}"
     echo "Nothing to commit. Working tree clean."
     exit 0
