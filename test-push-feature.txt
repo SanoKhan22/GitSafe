@@ -1,0 +1,8 @@
+Testing the new integrated push functionality!
+
+This file demonstrates that the Git Branch Manager now has:
+- Direct push command: ./branch_manager.sh push "message"
+- Interactive push interface
+- All-in-one solution for branch management and GitHub integration
+
+No need for separate push_to_github.sh script anymore!

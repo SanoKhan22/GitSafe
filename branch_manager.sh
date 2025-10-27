@@ -6795,7 +6795,7 @@ main() {
             ;;
         "push")
             shift
-            if [[ -n "$1" ]]; then
+            if [[ $# -gt 0 ]]; then
                 push_to_github "$*"
             else
                 interactive_push
