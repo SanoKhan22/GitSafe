@@ -300,7 +300,7 @@ show_usage() {
     echo "    sync [branch]           Synchronize with remote repository"
     echo "    status [--all]          Show branch status information"
     echo "    cleanup [target]        Clean up merged branches"
-    echo "    push [message]          Commit and push changes to GitHub"
+    echo "    push [message]          Commit and push changes to remote repository"
     echo ""
     
     echo -e "${CYAN}WORKFLOW COMMANDS:${NC}"
@@ -3583,7 +3583,7 @@ show_main_menu() {
     echo -e "    • Check repository health"
     echo -e "    • Show detailed information"
     echo ""
-    echo -e " ${CYAN}5.${NC} Push to GitHub"
+    echo -e " ${CYAN}5.${NC} Push to Repository"
     echo -e "    • Commit and push changes"
     echo -e "    • Interactive push options"
     echo -e "    • Auto-generated commit messages"
@@ -6432,7 +6432,7 @@ show_command_reference() {
     echo ""
     
     echo -e "${YELLOW}push${NC} [commit-message] [options]"
-    echo "    Commit and push changes to GitHub"
+    echo "    Commit and push changes to remote repository"
     echo "    Options: --no-confirm"
     echo "    Example: ./branch_manager.sh push \"Add new feature\""
     echo ""
@@ -6513,23 +6513,22 @@ push_to_github() {
     
     log_info "Starting push to GitHub process..."
     
-    # Repository URL (you can make this configurable)
-    local repo_url="https://github.com/SanoKhan22/GullyCric.git"
+    # Auto-detect repository URL from current Git repository
+    local repo_url
+    repo_url=$(git remote get-url origin 2>/dev/null || echo "")
     
-    echo -e "${BLUE}🏏 Git Branch Manager - Push to GitHub${NC}"
+    if [[ -z "$repo_url" ]]; then
+        log_error "No remote origin configured. Please set up your remote repository first."
+        echo "To set up remote origin, run:"
+        echo "  git remote add origin <your-repository-url>"
+        return 1
+    fi
+    
+    echo -e "${BLUE}🚀 Git Branch Manager - Push to Repository${NC}"
     echo "========================================"
     
-    # Check if remote origin exists and is correct
-    local current_remote
-    current_remote=$(git remote get-url origin 2>/dev/null || echo "")
-    
-    if [[ "$current_remote" != "$repo_url" ]]; then
-        echo -e "${YELLOW}⚠️  Setting up remote origin...${NC}"
-        git remote remove origin 2>/dev/null || true
-        git remote add origin "$repo_url"
-        echo -e "${GREEN}✅ Remote origin set to: $repo_url${NC}"
-        log_info "Remote origin configured: $repo_url"
-    fi
+    # Verify remote origin is accessible
+    log_debug "Using repository URL: $repo_url"
     
     # Check for changes (including untracked files)
     local has_changes=false
@@ -6622,14 +6621,19 @@ push_to_github() {
     
     # Perform the push
     if git push -u origin "$current_branch"; then
-        echo -e "\n${GREEN}✅ Successfully pushed to GitHub!${NC}"
-        echo -e "${GREEN}🔗 Repository: $repo_url${NC}"
+        # Extract repository name for display
+        local repo_name
+        repo_name=$(basename "$repo_url" .git 2>/dev/null || echo "repository")
+        
+        echo -e "\n${GREEN}✅ Successfully pushed to remote repository!${NC}"
+        echo -e "${GREEN}🔗 Repository: $repo_name${NC}"
         echo -e "${GREEN}🌿 Branch: $current_branch${NC}"
+        echo -e "${GREEN}📍 URL: $repo_url${NC}"
         
         log_operation "PUSH_TO_GITHUB" "$current_branch" "SUCCESS" "Pushed to $repo_url"
         return 0
     else
-        echo -e "\n${RED}❌ Failed to push to GitHub${NC}"
+        echo -e "\n${RED}❌ Failed to push to remote repository${NC}"
         log_error "Push to GitHub failed"
         log_operation "PUSH_TO_GITHUB" "$current_branch" "FAILED" "Push failed"
         
@@ -6654,7 +6658,7 @@ push_to_github() {
 
 # Interactive push interface
 interactive_push() {
-    echo -e "${WHITE}Interactive Push to GitHub${NC}"
+    echo -e "${WHITE}Interactive Push to Repository${NC}"
     echo "=========================="
     echo ""
     

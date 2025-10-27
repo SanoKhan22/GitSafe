@@ -1,0 +1,9 @@
+Testing Universal Git Branch Manager!
+
+This script now works with ANY Git repository:
+- Auto-detects repository URL from git remote origin
+- Works with GitHub, GitLab, Bitbucket, or any Git hosting service
+- No hardcoded repository URLs
+- Universal branch management solution
+
+Ready to be used in any project!
