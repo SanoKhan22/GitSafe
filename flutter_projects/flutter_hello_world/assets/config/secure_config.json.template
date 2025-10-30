@@ -1,0 +1,66 @@
+{
+  "api_keys": {
+    "cricket_api": {
+      "key": "your_cricket_api_key_here",
+      "secret": "your_cricket_api_secret_here",
+      "enabled": false
+    },
+    "weather_api": {
+      "key": "your_weather_api_key_here",
+      "enabled": false
+    },
+    "maps_api": {
+      "key": "your_maps_api_key_here",
+      "enabled": false
+    },
+    "news_api": {
+      "key": "your_news_api_key_here",
+      "enabled": false
+    }
+  },
+  "firebase": {
+    "project_id": "your_firebase_project_id",
+    "api_key": "your_firebase_api_key",
+    "app_id": "your_firebase_app_id",
+    "messaging_sender_id": "your_firebase_sender_id",
+    "enabled": false
+  },
+  "certificates": {
+    "ssl_pinning": {
+      "enabled": false,
+      "certificates": []
+    }
+  },
+  "encryption": {
+    "database_key": "your_database_encryption_key",
+    "storage_key": "your_storage_encryption_key",
+    "enabled": false
+  },
+  "oauth": {
+    "google": {
+      "client_id": "your_google_client_id",
+      "client_secret": "your_google_client_secret",
+      "enabled": false
+    },
+    "facebook": {
+      "app_id": "your_facebook_app_id",
+      "app_secret": "your_facebook_app_secret",
+      "enabled": false
+    }
+  },
+  "analytics": {
+    "google_analytics": {
+      "tracking_id": "your_ga_tracking_id",
+      "enabled": false
+    },
+    "firebase_analytics": {
+      "enabled": false
+    }
+  },
+  "push_notifications": {
+    "fcm": {
+      "server_key": "your_fcm_server_key",
+      "enabled": false
+    }
+  }
+}

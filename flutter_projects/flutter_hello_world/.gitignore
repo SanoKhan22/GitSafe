@@ -41,3 +41,22 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# GullyCric Configuration
+# Exclude sensitive configuration files
+assets/config/secure_config.json
+lib/config/api_keys.dart
+*.env
+.env.*
+
+# Build flavor specific files
+android/app/src/development/
+android/app/src/staging/
+android/app/src/production/google-services.json
+ios/Runner/GoogleService-Info.plist
+ios/firebase_app_id_file.json
+
+# API Keys and Secrets
+**/api_keys.dart
+**/secrets.dart
+**/firebase_options.dart

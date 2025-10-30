@@ -1,6 +1,6 @@
 # GullyCric - Cricket Game Development Project
 
-A Flutter-based cricket game development project with integrated Git workflow management using GitSafe.
+A Flutter-based cricket APP development project with integrated Git workflow management using GitSafe.
 
 ## Features
 
